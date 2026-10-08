@@ -81,7 +81,10 @@ opt-level = 1
 [profile.android]
 inherits = "release"
 debug = 0
-strip = "debuginfo"
+strip = "symbols"
+lto = "fat"
+codegen-units = 1
+panic = "abort"
 
 # (a patch that no longer matches the version wgpu asks for is dropped with only a warning;
 # the Security audit workflow fails when Cargo.lock lists one as unused)
