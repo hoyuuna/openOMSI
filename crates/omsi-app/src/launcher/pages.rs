@@ -520,6 +520,12 @@ fn graphics_profiles_block(ui: &mut Ui, s: &mut Value, dirty: &mut f32, c: &mut 
 
 /// How the game looks and how fast it runs.
 fn graphics_tab(ui: &mut Ui, s: &mut Value, dirty: &mut f32, cols: [Rect; 2]) -> [f32; 2] {
+    if crate::platform::MOBILE {
+        let mut c = Col::new(ui, cols[0], "Graphics");
+        ui.text_in("Graphics Locked (Super Optimized)", c.row(), 18.0, Weight::Bold, crate::launcher::TEXT, Align::Left);
+        ui.paragraph("Your graphics are permanently locked to the lowest, most optimized settings to ensure maximum frame rate and prevent lag on Android. You don't need to change anything.", c.row(), cols[0].w, 14.0, Weight::Regular, crate::launcher::TEXT_DIM);
+        return [c.y, cols[1].y];
+    }
     let mut c = Col::new(ui, cols[0], "Graphics");
     // Quality presets, first: they set most of what follows. (OMSI's own
     // option_presets/*.oop are named after the PCs of their day - "PC 2006", "X10 high",
