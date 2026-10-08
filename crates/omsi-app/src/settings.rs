@@ -413,26 +413,15 @@ impl Settings {
     pub fn load() -> Settings {
         let Some(p) = Self::path() else { return Settings::default() };
         let mut text = std::fs::read_to_string(&p).unwrap_or_default();
+        // OMSI_GRAPHICS=vanilla|vanilla_plus|enhanced: another renderer for one run
         if let Ok(g) = omsi_cfg::env::var("OMSI_GRAPHICS") {
             text.push_str(&format!("\ngraphics={g}\n"));
         }
         let mut s = Self::from_text(&text);
+        // OMSI_SAFE_GPU=<n>: the game was started again after its graphics device was lost
+        // (see `App::restart_after_device_loss`): lighter on the card each time
         if let Some(n) = omsi_cfg::env::var("OMSI_SAFE_GPU").ok().and_then(|v| v.parse::<u32>().ok()).filter(|n| *n > 0) {
             s.apply_safe_gpu(n);
-        }
-        if crate::platform::MOBILE {
-            s.msaa = 1;
-            s.anisotropy = 1;
-            s.ssao = false;
-            s.shadows = false;
-            s.shadow_size = 512;
-            s.mirror_size = 64;
-            s.max_obj_dist = 500.0;
-            s.pax_density = 0.5;
-            s.detail_textures = false;
-            s.post_aa = "none".into();
-            s.clouds = false;
-            s.windy_trees = false;
         }
         log::info!("settings from {}: msaa {} af {} ssao {} shadows {} ({}) navigator {} graphics {} post aa {} vsync {} render scale {} boarding {} min object size {} max object distance {} max fps {}", p.display(), s.msaa, s.anisotropy, s.ssao, s.shadows, s.shadow_size, s.navigator, s.graphics, s.post_aa, s.vsync, s.render_scale_text(), s.boarding, s.min_obj_size, s.object_distance(), s.max_fps);
         s

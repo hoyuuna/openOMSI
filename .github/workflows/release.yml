@@ -70,6 +70,11 @@ jobs:
           yes | "$sdkmanager" --licenses >/dev/null || true
           "$sdkmanager" "platforms;android-35" "build-tools;35.0.0" "ndk;28.2.13676358" >/dev/null
           echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/28.2.13676358" >> "$GITHUB_ENV"
+      - name: Cache Android Keystore
+        uses: actions/cache@v3
+        with:
+          path: android/debug.keystore
+          key: android-keystore
       - name: Build
         run: scripts/build-android.sh
       - name: Package

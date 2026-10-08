@@ -520,17 +520,12 @@ fn graphics_profiles_block(ui: &mut Ui, s: &mut Value, dirty: &mut f32, c: &mut 
 
 /// How the game looks and how fast it runs.
 fn graphics_tab(ui: &mut Ui, s: &mut Value, dirty: &mut f32, cols: [Rect; 2]) -> [f32; 2] {
-    if crate::platform::MOBILE {
-        let mut c = Col::new(ui, cols[0], "Graphics");
-        ui.text_in("Graphics Locked (Super Optimized)", c.row(), 18.0, Weight::Bold, crate::launcher::TEXT, Align::Left);
-        ui.paragraph("Your graphics are permanently locked to the lowest, most optimized settings to ensure maximum frame rate and prevent lag on Android. You don't need to change anything.", c.row(), cols[0].w, 14.0, Weight::Regular, crate::launcher::TEXT_DIM);
-        return [c.y, cols[1].y];
-    }
     let mut c = Col::new(ui, cols[0], "Graphics");
     // Quality presets, first: they set most of what follows. (OMSI's own
     // option_presets/*.oop are named after the PCs of their day - "PC 2006", "X10 high",
     // "Chicago Recommended" - which read as random words here.)
-    let presets: [(&str, serde_json::Value); 4] = [
+    let presets: [(&str, serde_json::Value); 5] = [
+        ("Lowest", json!({"msaa": 1, "anisotropy": 1, "shadow_size": 512, "ssao": false, "shadows": false, "detail_textures": false, "clouds": false, "view_distance": "400", "min_obj_size": 0.05, "max_obj_dist": "300", "mirror_size": 64, "mirror_refresh": "eco", "render_scale": "0.6", "texture_memory": 500, "windy_trees": false, "post_aa": "none"})),
         ("Low", json!({"msaa": 1, "anisotropy": 2, "shadow_size": 1024, "ssao": false, "shadows": false, "detail_textures": false, "clouds": false, "view_distance": "600", "min_obj_size": 0.03, "max_obj_dist": "500", "mirror_size": 128, "mirror_refresh": "eco", "render_scale": "0.75", "texture_memory": 800})),
         ("Medium", json!({"msaa": 2, "anisotropy": 4, "shadow_size": 2048, "ssao": false, "shadows": true, "detail_textures": true, "clouds": true, "view_distance": "900", "min_obj_size": 0.02, "max_obj_dist": "750", "mirror_size": 256, "mirror_refresh": "eco", "render_scale": "auto", "texture_memory": 1200})),
         ("High", json!({"msaa": 4, "anisotropy": 8, "shadow_size": 2048, "ssao": true, "shadows": true, "detail_textures": true, "clouds": true, "view_distance": "auto", "min_obj_size": 0.013, "max_obj_dist": "auto", "mirror_size": 256, "mirror_refresh": "full", "render_scale": "auto", "texture_memory": 0})),
