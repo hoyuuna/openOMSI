@@ -24,6 +24,7 @@ enum Btn {
     Camera,
     LookReset,
     Walk,
+    StepOut,
     Map,
     Timetable,
     Panel,
