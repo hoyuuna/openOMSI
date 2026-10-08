@@ -267,7 +267,7 @@ impl App {
         let y = pad + r;
         let step = r * 2.0 + 10.0 * u;
         let mut x = pad + r;
-        for (btn, icon) in [(Btn::Menu, "menu"), (Btn::Pause, if self.paused { "play_arrow" } else { "pause" }), (Btn::Camera, "videocam"), (Btn::Walk, "directions_walk"), (Btn::LookReset, "360")] {
+        for (btn, icon) in [(Btn::Menu, "menu"), (Btn::Pause, if self.paused { "play_arrow" } else { "pause" }), (Btn::Camera, "videocam"), (Btn::Walk, "directions_walk"), (Btn::StepOut, "exit_to_app"), (Btn::LookReset, "360")] {
             push(&mut b, btn, rb(x, y, r), icon, "", btn == Btn::Pause && self.paused, true);
             x += step;
         }
@@ -777,8 +777,12 @@ impl App {
                 self.touch_note(v);
             }
             Btn::Walk => {
-                self.tap_key(event_loop, KeyCode::F4, false, true);
-                self.tap_key(event_loop, KeyCode::F4, false, false);
+                self.foot_key(KeyCode::KeyG, true, false, false, false);
+                self.foot_key(KeyCode::KeyG, false, false, false, false);
+            }
+            Btn::StepOut => {
+                self.foot_key(KeyCode::KeyG, true, false, true, true);
+                self.foot_key(KeyCode::KeyG, false, false, true, true);
             }
             Btn::LookReset => {
                 self.game_action("view_reset_direction");
