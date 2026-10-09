@@ -82,6 +82,7 @@ opt-level = 1
 inherits = "release"
 debug = 0
 strip = "debuginfo"
+panic = "abort"
 
 # (a patch that no longer matches the version wgpu asks for is dropped with only a warning;
 # the Security audit workflow fails when Cargo.lock lists one as unused)
