@@ -539,7 +539,7 @@ impl Settings {
         }
     }
     pub(crate) fn phone() -> Self {
-        Self { msaa: 2, anisotropy: 4, ssao: false, shadow_size: 1024, mirror_size: 128, max_fps: 60, max_obj_dist: 900.0, pax_density: 0.7, navigator_corner: "top-center".into(), ..Self::desktop() }
+        Self { msaa: 1, anisotropy: 1, ssao: false, shadows: false, shadow_size: 512, mirror_size: 64, max_fps: 60, max_obj_dist: 500.0, pax_density: 0.5, detail_textures: false, post_aa: "none".into(), clouds: false, windy_trees: false, navigator_corner: "top-center".into(), ..Self::desktop() }
     }
     /// The defaults of a computer.
     fn desktop() -> Self {
