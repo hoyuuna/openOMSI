@@ -160,7 +160,7 @@ pub(crate) fn dropdown_apply(app: &mut App, action: &str) {
             }
         }
         "preset" => {
-            if let Some(i) = arg.trim().parse::<usize>().ok().filter(|i| *i < 6) {
+            if let Some(i) = arg.trim().parse::<usize>().ok().filter(|i| *i < 7) {
                 store_with(app, |v| {
                     // (a preset sets the mode as well)
                     let Some(p) = presets(v).into_iter().nth(i) else { return };
@@ -327,7 +327,7 @@ pub(super) fn select_row(file: &serde_json::Value, key: &str, name: &str, desc: 
 
 /// The quality presets (`graphics_presets`, as the launcher's): Low to Ultra, each with its
 /// graphics mode.
-pub(super) fn presets(_file: &serde_json::Value) -> [(&'static str, serde_json::Value); 6] {
+pub(super) fn presets(_file: &serde_json::Value) -> [(&'static str, serde_json::Value); 7] {
     omsi_launcher_lib::graphics_presets()
 }
 

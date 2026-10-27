@@ -2054,8 +2054,24 @@ pub fn effective_mode(v: &Value) -> &'static str {
 /// mirrors drawn as the picture, Ultra Real-Time Ray Tracing on top of all of it. Each is a step up in cost and the
 /// light's own shadows (cached tiles, a handful of passes) are far from the dearest of them. The
 /// texture memory is left as it is.
-pub fn graphics_presets() -> [(&'static str, Value); 6] {
-    // per level: Low, Medium, High, Extra, Max, Ultra
+pub fn graphics_presets() -> [(&'static str, Value); 7] {
+    let mut out: [(&'static str, Value); 7] = [
+        ("Lowest", json!({
+            "graphics": "vanilla", "ray_tracing": false, "msaa": 1, "anisotropy": 1,
+            "shadow_size": 512, "clouds": false, "rain_quality": "low", "windy_trees": false,
+            "view_distance": "400", "min_obj_size": 0.05, "max_obj_dist": "300",
+            "mirror_size": 64, "mirror_refresh": "eco", "mirror_quality": "standard", "render_scale": "0.6",
+            "detail_textures": false, "ssao": false, "shadows": false, "reflections": 0.0,
+            "light_shadows": "off", "cloud_shadows": false, "light_glow": false,
+            "street_light": "off", "puddles": "off", "post_aa": "none"
+        })),
+        ("Low", serde_json::Value::Null),
+        ("Medium", serde_json::Value::Null),
+        ("High", serde_json::Value::Null),
+        ("Extra", serde_json::Value::Null),
+        ("Max", serde_json::Value::Null),
+        ("Ultra", serde_json::Value::Null),
+    ];
     let graphics = ["vanilla", "vanilla_plus", "enhanced", "enhanced", "enhanced", "enhanced"];
     let msaa = [1, 4, 2, 4, 4, 4];
     let scale = ["0.75", "auto", "auto", "auto", "auto", "auto"];
@@ -2071,9 +2087,10 @@ pub fn graphics_presets() -> [(&'static str, Value); 6] {
     let street_light = ["off", "off", "off", "auto", "on", "on"];
     let puddles = ["off", "high", "low", "high", "high", "high"];
     let mirror_quality = ["standard", "standard", "standard", "standard", "enhanced", "enhanced"];
-    std::array::from_fn(|i| {
+    let names = ["Low", "Medium", "High", "Extra", "Max", "Ultra"];
+    for i in 0..6 {
         let low = i == 0;
-        let preset = json!({
+        let mut preset = json!({
             "graphics": graphics[i], "ray_tracing": i == 5, "msaa": msaa[i], "anisotropy": anisotropy[i],
             "shadow_size": shadow[i], "clouds": true, "rain_quality": rain[i], "windy_trees": !low,
             "view_distance": view[i], "min_obj_size": obj_size[i], "max_obj_dist": obj_dist[i],
@@ -2082,16 +2099,14 @@ pub fn graphics_presets() -> [(&'static str, Value); 6] {
             "light_shadows": light_shadows[i], "cloud_shadows": i >= 3, "light_glow": i >= 3,
             "street_light": street_light[i], "puddles": puddles[i],
         });
-        let mut preset = preset;
-        // (Low is Vanilla, which draws none of these: it leaves them as they are, so that going back
-        // to Vanilla+ does not find them off)
         if low {
             for k in ["ssao", "shadows", "detail_textures"] {
                 preset.as_object_mut().map(|o| o.remove(k));
             }
         }
-        (["Low", "Medium", "High", "Extra", "Max", "Ultra"][i], preset)
-    })
+        out[i + 1] = (names[i], preset);
+    }
+    out
 }
 
 /// Normalize vehicle smoke visibility for the game, launcher and saved profiles.
